@@ -30,7 +30,7 @@ type SlackMessage struct {
 }
 
 func NewGopher() *Gopher {
-	return &Gopher{token: "xoxb-3211150999-AlHt3inJ1QAvTrzIYuoD2W1B"}
+	return &Gopher{token: ""}
 }
 
 func main() {
