@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"os"
 
 	"github.com/daph/goslack"
@@ -15,9 +16,29 @@ type SlackMessage struct {
 	Text    string `json:"text"`
 }
 
+type Config struct {
+	token   string
+	channel string
+}
+
+func NewConfig() Config {
+	token, err := ioutil.ReadFile("token")
+	if err != nil {
+		os.Exit(-1)
+	}
+	channel, err := ioutil.ReadFile("channel")
+	if err != nil {
+		os.Exit(-1)
+	}
+
+	return Config{string(token), string(channel)}
+}
+
 func main() {
 
-	ws, err := goslack.Connect("")
+	conf := NewConfig()
+
+	ws, err := goslack.Connect(conf.token)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
@@ -27,7 +48,7 @@ func main() {
 	var message SlackMessage
 	message.Id += 1
 	message.Type = "message"
-	message.Channel = ""
+	message.Channel = conf.channel
 	message.Text = "hello slack"
 	b_message, err := json.Marshal(message)
 	if err != nil {
