@@ -43,7 +43,6 @@ func main() {
 		fmt.Println(err)
 		os.Exit(-1)
 	}
-	fmt.Println(ws)
 	defer ws.Close()
 	var message SlackMessage
 	message.Id += 1
