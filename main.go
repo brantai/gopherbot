@@ -3,24 +3,10 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
-	"net/http"
-	"net/url"
 	"os"
-	"strings"
 
-	"golang.org/x/net/websocket"
+	"github.com/daph/goslack"
 )
-
-type Gopher struct {
-	token string
-}
-
-type SlackResponse struct {
-	Ok      bool          `json:"ok"`
-	Members []interface{} `json:"members"`
-	Url     string        `json:"url"`
-}
 
 type SlackMessage struct {
 	Id      int    `json:"id"`
@@ -29,50 +15,15 @@ type SlackMessage struct {
 	Text    string `json:"text"`
 }
 
-func NewGopher() *Gopher {
-	return &Gopher{token: ""}
-}
-
 func main() {
 
-	g := NewGopher()
-	resp, err := http.PostForm("https://slack.com/api/rtm.start", url.Values{"token": {g.token}})
+	ws, err := goslack.Connect("")
 	if err != nil {
-		fmt.Printf("Couldn't get user list. ERR: %v", err)
+		fmt.Println(err)
 		os.Exit(-1)
 	}
-	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		fmt.Printf("Couldn't read response body. ERR: %v", err)
-		os.Exit(-1)
-	}
-
-	var sr SlackResponse
-	err = json.Unmarshal(body, &sr)
-	if err != nil {
-		fmt.Printf("Couldn't decode json. ERR: %v", err)
-		os.Exit(-1)
-	}
-
-	splitUrl := strings.Split(sr.Url, "/")
-	splitUrl[2] = splitUrl[2] + ":443"
-	sr.Url = strings.Join(splitUrl, "/")
-
-	ws, err := websocket.Dial(sr.Url, "", "http://localhost/")
-	if err != nil {
-		fmt.Printf("Couldn't dial websocket. ERR: %v", err)
-		os.Exit(-1)
-	}
+	fmt.Println(ws)
 	defer ws.Close()
-
-	fmt.Println("Connected to slack")
-	//	msg_scanner := bufio.NewScanner(ws)
-	//var msg bytes.Buffer
-	//for msg_scanner.Scan() {
-	//		msg.WriteString(msg_scanner.Text())
-	//	}
-	//	fmt.Println(msg.String())
 	var message SlackMessage
 	message.Id += 1
 	message.Type = "message"
@@ -83,7 +34,8 @@ func main() {
 		fmt.Println("Could not marshal the message. ERR: %v", err)
 		os.Exit(-1)
 	}
-	if _, err := ws.Write(b_message); err != nil {
+	_, err = ws.Write(b_message)
+	if err != nil {
 		fmt.Println("Couldn't write message. ERR: %v", err)
 		os.Exit(-1)
 	}
