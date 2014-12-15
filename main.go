@@ -5,7 +5,6 @@ import (
 	"io/ioutil"
 	"os"
 	"strings"
-	"time"
 
 	"github.com/daph/goslack"
 )
@@ -58,8 +57,6 @@ func main() {
 			if msg.Type == "message" && msg.User != conf.user && strings.Contains(msg.Text, conf.user) {
 				goslack.SendMessage(ws, goslack.MessageSend{msgId, "message", msg.Channel, "hello"})
 				msgId++
-				fmt.Println(msg)
-				time.Sleep(time.Second * 1)
 			}
 		}
 	}
