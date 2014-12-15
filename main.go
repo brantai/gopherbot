@@ -8,7 +8,13 @@ import (
 	"time"
 
 	"github.com/daph/goslack"
+	"golang.org/x/net/websocket"
 )
+
+// Since each message id needs to be unique for the session
+// This gets to be global and gets to be incremented any where
+// I feel like. Methinks this will cause problems, but oh well.
+var msgId int
 
 type Config struct {
 	token   string
@@ -16,7 +22,7 @@ type Config struct {
 	user    string
 }
 
-func NewConfig() Config {
+func newConfig() Config {
 	token, err := ioutil.ReadFile("token")
 	if err != nil {
 		os.Exit(-1)
@@ -33,10 +39,17 @@ func NewConfig() Config {
 	return Config{string(token), string(channel), string(user)}
 }
 
+func handleMessage(msg goslack.MessageRecv, ws *websocket.Conn, conf Config) {
+	if msg.Type == "message" && msg.User != conf.user && strings.Contains(msg.Text, conf.user) {
+		goslack.SendMessage(ws, goslack.MessageSend{msgId, "message", msg.Channel, "hello"})
+		msgId++
+	}
+}
+
 func main() {
 
-	msgId := 1
-	conf := NewConfig()
+	msgId = 1
+	conf := newConfig()
 
 	ws, err := goslack.Connect(conf.token)
 	if err != nil {
@@ -56,10 +69,7 @@ func main() {
 	for {
 		select {
 		case msg := <-chat_ch:
-			if msg.Type == "message" && msg.User != conf.user && strings.Contains(msg.Text, conf.user) {
-				goslack.SendMessage(ws, goslack.MessageSend{msgId, "message", msg.Channel, "hello"})
-				msgId++
-			}
+			go handleMessage(msg, ws, conf)
 		case <-time.After(30 * time.Second):
 			goslack.SendMessage(ws, goslack.MessageSend{msgId, "ping", "", ""})
 			msgId++
