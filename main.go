@@ -4,11 +4,9 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
-	"strings"
 	"time"
 
 	"github.com/daph/goslack"
-	"golang.org/x/net/websocket"
 )
 
 // Since each message id needs to be unique for the session
@@ -25,26 +23,21 @@ type Config struct {
 func newConfig() Config {
 	token, err := ioutil.ReadFile("token")
 	if err != nil {
+		fmt.Println("No 'token' file!")
 		os.Exit(-1)
 	}
 	channel, err := ioutil.ReadFile("channel")
 	if err != nil {
+		fmt.Println("No 'channel' file!")
 		os.Exit(-1)
 	}
 	user, err := ioutil.ReadFile("user")
 	if err != nil {
+		fmt.Println("No 'user' file!")
 		os.Exit(-1)
 	}
 
 	return Config{string(token), string(channel), string(user)}
-}
-
-func handleMessage(msg goslack.MessageRecv, ws *websocket.Conn, conf Config) {
-	if msg.Type != "message" || msg.Type == conf.user || !strings.Contains(msg.Text, conf.user) {
-		return
-	}
-	goslack.SendMessage(ws, goslack.MessageSend{msgId, "message", msg.Channel, "hello"})
-	msgId++
 }
 
 func main() {
