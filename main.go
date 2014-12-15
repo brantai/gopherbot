@@ -63,10 +63,14 @@ func main() {
 	for {
 		select {
 		case msg := <-chat_ch:
-			go handleMessage(msg, ws, conf)
-		case <-time.After(30 * time.Second):
-			goslack.SendMessage(ws, goslack.MessageSend{msgId, "ping", "", ""})
+			go handleMessage(msg, ws, conf) //in handleMessage.go
+		case <-time.After(20 * time.Second):
+			err := goslack.SendMessage(ws, goslack.MessageSend{msgId, "ping", "", ""})
 			msgId++
+			if err != nil {
+				fmt.Printf("Problem sending ping. ERR: %v", err)
+				os.Exit(-1)
+			}
 		}
 	}
 }

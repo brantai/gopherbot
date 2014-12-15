@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+	"os/exec"
 	"strings"
 
 	"github.com/daph/goslack"
@@ -16,11 +18,36 @@ func handleMessage(msg goslack.MessageRecv, ws *websocket.Conn, conf Config) {
 
 	command := strings.Split(msg.Text, " ")
 	if len(command) < 2 {
-		goslack.SendMessage(ws, goslack.MessageSend{msgId, "message", msg.Channel, "derp"})
+		goslack.SendMessage(ws, goslack.MessageSend{msgId, "message", msg.Channel, "herp"})
 		return
 	}
 
-	goslack.SendMessage(ws, goslack.MessageSend{msgId, "message", msg.Channel, command[1]})
+	switch command[1] {
+	case "figlet":
+		if len(command) < 3 {
+			goslack.SendMessage(ws, goslack.MessageSend{msgId, "message", msg.Channel, "herp"})
+			return
+		}
+		output, err := figlet(command[2:])
+		if err != nil {
+			goslack.SendMessage(ws, goslack.MessageSend{msgId, "message", msg.Channel,
+				fmt.Sprintf("There was an error running your command. ERR: %v", err)})
+			return
+		}
+		goslack.SendMessage(ws, goslack.MessageSend{msgId, "message", msg.Channel, "```" + output + "```"})
+
+	default:
+		goslack.SendMessage(ws, goslack.MessageSend{msgId, "message", msg.Channel, "derp"})
+	}
 
 	msgId++
+}
+
+func figlet(command []string) (string, error) {
+	figletCmd := exec.Command("figlet", strings.Join(command, " "))
+	figletOut, err := figletCmd.Output()
+	if err != nil {
+		return "", err
+	}
+	return string(figletOut), nil
 }
