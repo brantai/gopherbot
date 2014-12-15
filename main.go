@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/daph/goslack"
 )
@@ -44,11 +45,12 @@ func main() {
 	}
 	defer ws.Close()
 	var message goslack.MessageSend
-	message.Id += 1
+	message.Id = msgId
 	message.Type = "message"
 	message.Channel = conf.channel
 	message.Text = "hello slack"
 	goslack.SendMessage(ws, message)
+	msgId++
 	chat_ch := make(chan goslack.MessageRecv)
 	go goslack.ReadMessages(ws, chat_ch)
 	for {
@@ -58,6 +60,9 @@ func main() {
 				goslack.SendMessage(ws, goslack.MessageSend{msgId, "message", msg.Channel, "hello"})
 				msgId++
 			}
+		case <-time.After(30 * time.Second):
+			goslack.SendMessage(ws, goslack.MessageSend{msgId, "ping", "", ""})
+			msgId++
 		}
 	}
 }
