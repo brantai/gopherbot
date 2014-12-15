@@ -40,10 +40,11 @@ func newConfig() Config {
 }
 
 func handleMessage(msg goslack.MessageRecv, ws *websocket.Conn, conf Config) {
-	if msg.Type == "message" && msg.User != conf.user && strings.Contains(msg.Text, conf.user) {
-		goslack.SendMessage(ws, goslack.MessageSend{msgId, "message", msg.Channel, "hello"})
-		msgId++
+	if msg.Type != "message" || msg.Type == conf.user || !strings.Contains(msg.Text, conf.user) {
+		return
 	}
+	goslack.SendMessage(ws, goslack.MessageSend{msgId, "message", msg.Channel, "hello"})
+	msgId++
 }
 
 func main() {
