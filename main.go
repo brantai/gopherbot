@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
-	"time"
 
 	"github.com/daph/goslack"
 )
@@ -41,6 +40,7 @@ func newConfig() Config {
 }
 
 func main() {
+	InitLogger()
 
 	msgId = 1
 	conf := newConfig()
@@ -58,19 +58,14 @@ func main() {
 	message.Text = "hello slack"
 	goslack.SendMessage(ws, message)
 	msgId++
-	chat_ch := make(chan goslack.MessageRecv)
-	go goslack.ReadMessages(ws, chat_ch)
-	for {
-		select {
-		case msg := <-chat_ch:
+
+	for ws.IsClientConn() {
+		msg, err := goslack.ReadMessages(ws)
+		if err != nil {
+			debugLog.Printf("Could not read messages. ERR: %v", err)
+		}
+		if (msg != goslack.MessageRecv{}) {
 			go handleMessage(msg, ws, conf) //in handleMessage.go
-		case <-time.After(20 * time.Second):
-			err := goslack.SendMessage(ws, goslack.MessageSend{msgId, "ping", "", ""})
-			msgId++
-			if err != nil {
-				fmt.Printf("Problem sending ping. ERR: %v", err)
-				os.Exit(-1)
-			}
 		}
 	}
 }
