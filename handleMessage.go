@@ -9,7 +9,7 @@ import (
 	"golang.org/x/net/websocket"
 )
 
-func handleMessage(msg goslack.MessageRecv, ws *websocket.Conn, conf Config) {
+func handleMessage(msg goslack.Event, ws *websocket.Conn, conf Config) {
 	// If the message isn't of type message or is sent my the bot user or whas not sent by @<user>
 	// then return
 	if msg.Type != "message" || msg.Type == conf.user || !strings.Contains(msg.Text, conf.user) {
@@ -18,26 +18,26 @@ func handleMessage(msg goslack.MessageRecv, ws *websocket.Conn, conf Config) {
 
 	command := strings.Split(msg.Text, " ")
 	if len(command) < 2 {
-		goslack.SendMessage(ws, goslack.MessageSend{msgId, "message", msg.Channel, "herp"})
+		goslack.SendMessage(ws, goslack.Event{msgId, "message", msg.Channel, "herp", "", ""})
 		return
 	}
 
 	switch command[1] {
 	case "figlet":
 		if len(command) < 3 {
-			goslack.SendMessage(ws, goslack.MessageSend{msgId, "message", msg.Channel, "herp"})
+			goslack.SendMessage(ws, goslack.Event{msgId, "message", msg.Channel, "herp", "", ""})
 			return
 		}
 		output, err := figlet(command[2:])
 		if err != nil {
-			goslack.SendMessage(ws, goslack.MessageSend{msgId, "message", msg.Channel,
-				fmt.Sprintf("There was an error running your command. ERR: %v", err)})
+			goslack.SendMessage(ws, goslack.Event{msgId, "message", msg.Channel,
+				fmt.Sprintf("There was an error running your command. ERR: %v", err), "", ""})
 			return
 		}
-		goslack.SendMessage(ws, goslack.MessageSend{msgId, "message", msg.Channel, "```" + output + "```"})
+		goslack.SendMessage(ws, goslack.Event{msgId, "message", msg.Channel, "```" + output + "```", "", ""})
 
 	default:
-		goslack.SendMessage(ws, goslack.MessageSend{msgId, "message", msg.Channel, "derp"})
+		goslack.SendMessage(ws, goslack.Event{msgId, "message", msg.Channel, "derp", "", ""})
 	}
 
 	msgId++

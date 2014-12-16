@@ -2,10 +2,12 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"io/ioutil"
 	"os"
 
 	"github.com/daph/goslack"
+	"golang.org/x/net/websocket"
 )
 
 // Since each message id needs to be unique for the session
@@ -39,6 +41,15 @@ func newConfig() Config {
 	return Config{string(token), string(channel), string(user)}
 }
 
+func reconnect(ws *websocket.Conn, conf Config) {
+	ws.Close()
+	ws, err := goslack.Connect(conf.token)
+	if err != nil {
+		debugLog.Printf("Could not reconnect")
+		os.Exit(-1)
+	}
+}
+
 func main() {
 	InitLogger()
 
@@ -51,7 +62,7 @@ func main() {
 		os.Exit(-1)
 	}
 	defer ws.Close()
-	var message goslack.MessageSend
+	var message goslack.Event
 	message.Id = msgId
 	message.Type = "message"
 	message.Channel = conf.channel
@@ -62,9 +73,13 @@ func main() {
 	for ws.IsClientConn() {
 		msg, err := goslack.ReadMessages(ws)
 		if err != nil {
+			if err == io.EOF {
+				debugLog.Printf("Got EOF from server. Reconnect and connect")
+				reconnect(ws, conf)
+			}
 			debugLog.Printf("Could not read messages. ERR: %v", err)
 		}
-		if (msg != goslack.MessageRecv{}) {
+		if (msg != goslack.Event{}) {
 			go handleMessage(msg, ws, conf) //in handleMessage.go
 		}
 	}
