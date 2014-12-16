@@ -28,7 +28,7 @@ func main() {
 	}
 	defer client.Ws.Close()
 
-	for client.Ws.IsClientConn() {
+	for {
 		msg, err := client.ReadMessages()
 		if err != nil {
 			debugLog.Printf("Could not read messages. ERR: %v", err)
