@@ -8,7 +8,7 @@ import (
 	"github.com/daph/goslack"
 )
 
-func handleMessage(msg goslack.Event, client *goslack.Client, conf Config) {
+func handleMessage(msg goslack.Event, client *goslack.Client) {
 	// If the message isn't of type message or is sent my the bot user or whas not sent by @<user>
 	// then return
 	if msg.Type != "message" || !strings.Contains(msg.Text, client.Self.Id) {

@@ -8,26 +8,20 @@ import (
 	"github.com/daph/goslack"
 )
 
-type Config struct {
-	token string
-}
-
-func newConfig() Config {
+func getToken() string {
 	token, err := ioutil.ReadFile("token")
 	if err != nil {
 		fmt.Println("No 'token' file!")
 		os.Exit(-1)
 	}
 
-	return Config{string(token)}
+	return string(token)
 }
 
 func main() {
 	InitLogger()
 	debugLog.Println("Startup")
-	conf := newConfig()
-
-	client, err := goslack.NewClient(conf.token)
+	client, err := goslack.NewClient(getToken())
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
@@ -40,7 +34,7 @@ func main() {
 			debugLog.Printf("Could not read messages. ERR: %v", err)
 		}
 		if (msg != goslack.Event{}) {
-			go handleMessage(msg, &client, conf) //in handleMessage.go
+			go handleMessage(msg, &client) //in handleMessage.go
 		}
 	}
 }
