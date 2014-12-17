@@ -54,6 +54,8 @@ func handleMessage(msg goslack.Event, client *goslack.Client) {
 			return
 		}
 		client.PushMessage(msg.Channel, giphy(command[2:]))
+	case "randomgif":
+		client.PushMessage(msg.Channel, randomgif())
 
 	default:
 		client.PushMessage(msg.Channel, "derp")
