@@ -3,3 +3,5 @@ channel
 gopherbot*
 gopher.log
 user
+apikey
+build_linux.sh

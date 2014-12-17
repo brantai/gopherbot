@@ -34,6 +34,27 @@ func handleMessage(msg goslack.Event, client *goslack.Client) {
 		}
 		client.PushMessage(msg.Channel, "```"+output+"```")
 
+	case "ud":
+		if len(command) < 3 {
+			client.PushMessage(msg.Channel, "herp")
+			return
+		}
+		client.PushMessage(msg.Channel, ud(command[2:]))
+
+	case "google":
+		if len(command) < 3 {
+			client.PushMessage(msg.Channel, "herp")
+			return
+		}
+		client.PushMessage(msg.Channel, google(command[2:]))
+
+	case "giphy":
+		if len(command) < 3 {
+			client.PushMessage(msg.Channel, "herp")
+			return
+		}
+		client.PushMessage(msg.Channel, giphy(command[2:]))
+
 	default:
 		client.PushMessage(msg.Channel, "derp")
 	}
@@ -47,4 +68,13 @@ func figlet(command []string) (string, error) {
 		return "", err
 	}
 	return string(figletOut), nil
+}
+
+func ud(command []string) string {
+	return "http://www.urbandictionary.com/define.php?term=" + command[0]
+}
+
+func google(command []string) string {
+	query := strings.Join(command, "%20")
+	return "https://www.google.com/search?q=" + query
 }
