@@ -27,13 +27,11 @@ func main() {
 		os.Exit(-1)
 	}
 	defer client.Ws.Close()
-
+	go client.ReadMessages()
+	go client.SendMessages()
 	for {
-		msg, err := client.ReadMessages()
-		if err != nil {
-			debugLog.Printf("Could not read messages. ERR: %v", err)
-		}
-		if (msg != goslack.Event{}) {
+		select {
+		case msg := <-client.MsgIn:
 			go handleMessage(msg, &client) //in handleMessage.go
 		}
 	}

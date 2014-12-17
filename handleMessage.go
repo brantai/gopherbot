@@ -17,26 +17,25 @@ func handleMessage(msg goslack.Event, client *goslack.Client) {
 
 	command := strings.Split(msg.Text, " ")
 	if len(command) < 2 {
-		client.SendMessage(goslack.Event{client.MsgId, "message", msg.Channel, "herp", "", ""})
+		client.PushMessage(msg.Channel, "herp")
 		return
 	}
 
 	switch command[1] {
 	case "figlet":
 		if len(command) < 3 {
-			client.SendMessage(goslack.Event{client.MsgId, "message", msg.Channel, "herp", "", ""})
+			client.PushMessage(msg.Channel, "herp")
 			return
 		}
 		output, err := figlet(command[2:])
 		if err != nil {
-			client.SendMessage(goslack.Event{client.MsgId, "message", msg.Channel,
-				fmt.Sprintf("There was an error running your command. ERR: %v", err), "", ""})
+			client.PushMessage(msg.Channel, fmt.Sprintf("There was an error running your command. ERR: %v", err))
 			return
 		}
-		client.SendMessage(goslack.Event{client.MsgId, "message", msg.Channel, "```" + output + "```", "", ""})
+		client.PushMessage(msg.Channel, "```"+output+"```")
 
 	default:
-		client.SendMessage(goslack.Event{client.MsgId, "message", msg.Channel, "derp", "", ""})
+		client.PushMessage(msg.Channel, "derp")
 	}
 
 }
