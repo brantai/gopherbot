@@ -7,6 +7,8 @@ import (
 	"strings"
 )
 
+type GiphyPlugin struct{}
+
 type GiphyResponse struct {
 	Data []GiphyData `json:"data"`
 }
@@ -15,7 +17,14 @@ type GiphyData struct {
 	Url string `json:"url"`
 }
 
-func giphy(command []string) string {
+func (p GiphyPlugin) Name() string {
+	return "giphy"
+}
+
+func (p GiphyPlugin) Execute(command []string) string {
+	if len(command) < 1 {
+		return "herp"
+	}
 	var gresp GiphyResponse
 	apikey, err := ioutil.ReadFile("apikey")
 	if err != nil {

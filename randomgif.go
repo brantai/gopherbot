@@ -6,12 +6,19 @@ import (
 	"net/http"
 )
 
+type RandomgifPlugin struct{}
+
 type RandomGif struct {
 	Token  string `json:"token"`
 	GifUrl string `json:"gif_url"`
 }
 
-func randomgif() string {
+func (p RandomgifPlugin) Name() string {
+	return "randomgif"
+}
+
+func (p RandomgifPlugin) Execute(command []string) string {
+	_ = command // This plugin doesn't need command bits, but the interface defines ti
 	resp, err := http.Get("http://gifs.com/r.json")
 	if err != nil {
 		return "Couldn't get random gif"
