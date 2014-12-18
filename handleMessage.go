@@ -18,7 +18,13 @@ func handleMessage(msg goslack.Event, client *goslack.Client) {
 		return
 	}
 
-	plugins := []Plugin{GiphyPlugin{}, RandomgifPlugin{}, FigletPlugin{}, UdPlugin{}}
+	plugins := []Plugin{
+		GiphyPlugin{},
+		RandomgifPlugin{},
+		FigletPlugin{},
+		UdPlugin{},
+		FortunePlugin{},
+	}
 
 	temp := strings.Join(strings.Split(msg.Text, "")[1:], "")
 	command := strings.Split(temp, " ")
