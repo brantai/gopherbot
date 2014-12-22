@@ -5,3 +5,5 @@ gopher.log
 user
 apikey
 build_linux.sh
+pd_*
+imgur_*

@@ -24,6 +24,7 @@ func handleMessage(msg goslack.Event, client *goslack.Client) {
 		FigletPlugin{},
 		UdPlugin{},
 		FortunePlugin{},
+		ImgurPlugin{},
 	}
 
 	temp := strings.Join(strings.Split(msg.Text, "")[1:], "")
