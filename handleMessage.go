@@ -34,6 +34,16 @@ func handleMessage(msg goslack.Event, client *goslack.Client) {
 		return
 	}
 
+	if command[0] == "help" {
+		pluginNames := "| "
+		for _, v := range plugins {
+			pluginNames += v.Name() + " | "
+		}
+
+		client.PushMessage(msg.Channel, pluginNames)
+		return
+	}
+
 	for _, v := range plugins {
 		if command[0] == v.Name() {
 			client.PushMessage(msg.Channel, v.Execute(command[1:]))
