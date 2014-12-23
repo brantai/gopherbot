@@ -8,6 +8,10 @@ import (
 
 type FigletPlugin struct{}
 
+func (p FigletPlugin) Help() string {
+	return "Display large characters made up of ordinary screen characters. Usage: !figlet <message>"
+}
+
 func (p FigletPlugin) Name() string {
 	return "figlet"
 }

@@ -8,6 +8,7 @@ import (
 
 type Plugin interface {
 	Name() string
+	Help() string
 	Execute(args []string) string
 }
 
@@ -35,11 +36,22 @@ func handleMessage(msg goslack.Event, client *goslack.Client) {
 	}
 
 	if command[0] == "help" {
+		if len(command) > 1 {
+			for _, v := range plugins {
+				if command[1] == v.Name() {
+					client.PushMessage(msg.Channel, v.Help())
+					return
+				}
+			}
+		}
+
+		// If we get to this point, the user was either
+		// asking for general help, or help on a plugin
+		// that does not exist
 		pluginNames := "| "
 		for _, v := range plugins {
 			pluginNames += v.Name() + " | "
 		}
-
 		client.PushMessage(msg.Channel, pluginNames)
 		return
 	}

@@ -4,6 +4,10 @@ import "strings"
 
 type UdPlugin struct{}
 
+func (p UdPlugin) Help() string {
+	return "Search urban dictionary. Usage: !ud <search term>"
+}
+
 func (p UdPlugin) Name() string {
 	return "ud"
 }

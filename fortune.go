@@ -7,6 +7,10 @@ import (
 
 type FortunePlugin struct{}
 
+func (p FortunePlugin) Help() string {
+	return "Print a random, hopefully interesting, adage. Usage: !fortune"
+}
+
 func (p FortunePlugin) Name() string {
 	return "fortune"
 }

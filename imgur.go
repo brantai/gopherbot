@@ -19,6 +19,10 @@ type ImgurData struct {
 	Link string `json:"link"`
 }
 
+func (p ImgurPlugin) Help() string {
+	return "Search imgur or return top image from the viral gallery. Usage: !imgur <search term>"
+}
+
 func (p ImgurPlugin) Name() string {
 	return "imgur"
 }

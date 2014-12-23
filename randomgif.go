@@ -13,6 +13,10 @@ type RandomGif struct {
 	GifUrl string `json:"gif_url"`
 }
 
+func (p RandomgifPlugin) Help() string {
+	return "Returns a random gif from gifs.com. Usage: !randomgif"
+}
+
 func (p RandomgifPlugin) Name() string {
 	return "randomgif"
 }
