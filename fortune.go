@@ -7,6 +7,10 @@ import (
 
 type FortunePlugin struct{}
 
+func init() {
+	Plugins = append(Plugins, FortunePlugin{})
+}
+
 func (p FortunePlugin) Help() string {
 	return "Print a random, hopefully interesting, adage. Usage: !fortune"
 }

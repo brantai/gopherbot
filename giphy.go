@@ -17,6 +17,10 @@ type GiphyData struct {
 	Url string `json:"url"`
 }
 
+func init() {
+	Plugins = append(Plugins, GiphyPlugin{})
+}
+
 func (p GiphyPlugin) Help() string {
 	return "Returns the first search result from giphy.com. Usage: !giphy <search term>"
 }
