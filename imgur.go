@@ -37,9 +37,9 @@ func (p ImgurPlugin) Execute(command []string) string {
 
 func search(command []string) string {
 	var iresp ImgurResponse
-	client_id, err := ioutil.ReadFile("imgur_cid")
-	if err != nil {
-		return "Error reading Imgur client ID file"
+	client_id := configMap["imgur_cid"]
+	if client_id == "" {
+		return "No imgur_cid in config file"
 	}
 
 	query := strings.Join(command, "%20")
@@ -77,9 +77,9 @@ func search(command []string) string {
 
 func topViral() string {
 	var iresp ImgurResponse
-	client_id, err := ioutil.ReadFile("imgur_cid")
-	if err != nil {
-		return "Error reading Imgur client ID file"
+	client_id := configMap["imgur_cid"]
+	if client_id == "" {
+		return "No imgur_cid in config file"
 	}
 
 	client := &http.Client{}

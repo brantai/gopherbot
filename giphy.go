@@ -30,9 +30,9 @@ func (p GiphyPlugin) Execute(command []string) string {
 		return "herp"
 	}
 	var gresp GiphyResponse
-	apikey, err := ioutil.ReadFile("apikey")
-	if err != nil {
-		return "Error reading Giphy API key file"
+	apikey := configMap["giphy_key"]
+	if apikey == "" {
+		return "No giphy_key in config file"
 	}
 	resp, err := http.Get("http://api.giphy.com/v1/gifs/search?q=" + strings.Join(command, "+") + "&api_key=" + string(apikey) + "&limit=1")
 	if err != nil {
