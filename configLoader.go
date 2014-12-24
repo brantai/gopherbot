@@ -5,11 +5,9 @@ import (
 	"os"
 )
 
-var configMap map[string]string
+var configMap = make(map[string]string)
 
 func loadConfig() error {
-
-	configMap = make(map[string]string)
 
 	file, err := os.Open("gopher.cfg")
 	if err != nil {
