@@ -5,5 +5,3 @@ type Plugin interface {
 	Help() string
 	Execute(args []string) string
 }
-
-var Plugins = make([]Plugin, 0)
