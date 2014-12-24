@@ -6,14 +6,6 @@ import (
 	"github.com/daph/goslack"
 )
 
-type Plugin interface {
-	Name() string
-	Help() string
-	Execute(args []string) string
-}
-
-var Plugins = make([]Plugin, 0)
-
 func handleMessage(msg goslack.Event, client *goslack.Client) {
 	// If the message isn't of type message or is sent my the bot user or whas not sent by @<user>
 	// then return
