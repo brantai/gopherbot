@@ -9,5 +9,7 @@ var (
 )
 
 const (
-	DATA_DIR string = "data/"
+	DATA_DIR string = "data"
+	CFG_FILE string = "gopher.cfg"
+	LOG_FILE string = "gopher.log"
 )

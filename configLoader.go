@@ -7,7 +7,7 @@ import (
 
 func loadConfig() error {
 
-	file, err := os.Open(DATA_DIR + "gopher.cfg")
+	file, err := os.Open(DATA_DIR + "/" + CFG_FILE)
 	if err != nil {
 		debugLog.Printf("Could not open config file: %v", err)
 		return err
