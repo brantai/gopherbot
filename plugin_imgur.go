@@ -70,7 +70,7 @@ func search(command []string) string {
 
 	err = json.Unmarshal(body, &iresp)
 	if err != nil {
-		return "Error unmarshaling Imgur response"
+		return fmt.Sprintf("Error unmarshaling Imgur response.\nERR: %v\nBody: %v", err, body)
 	}
 
 	if len(iresp.Data) <= 0 {

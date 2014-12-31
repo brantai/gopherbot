@@ -25,13 +25,11 @@ func main() {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-	defer client.Ws.Close()
-	go client.ReadMessages()
-	go client.SendMessages()
+	defer client.Close()
 	for {
 		select {
 		case msg := <-client.MsgIn:
-			go handleMessage(msg, &client) //in handleMessage.go
+			go handleMessage(msg, client) //in handleMessage.go
 		}
 	}
 }
