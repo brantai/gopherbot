@@ -85,5 +85,5 @@ func setMw(mwDur time.Duration) string {
 	if resp.StatusCode != 201 {
 		return fmt.Sprintf("Error posting to pagerduty API. Code: %v", resp.StatusCode)
 	}
-	return "Set MW Window"
+	return "Set PD Maintenance Window"
 }
