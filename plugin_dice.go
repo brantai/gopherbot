@@ -2,8 +2,7 @@ package main
 
 import (
 	"fmt"
-	"strings"
-        "math/rand"
+        "github.com/tonio-ramirez/dice"
 	"strconv"
 )
 
@@ -20,20 +19,23 @@ func (p DicePlugin) Help() string {
 func (p DicePlugin) Name() string {
 	return "dice"
 }
-func (p DicePlugin) Execute(command string) string {
+
+func intsToStrings(ints []int) (strings []string) {
+        strings = make([]string, len(ints))
+        for i, v := range ints {
+                strings[i] = strconv.Itoa(v)
+        }
+        return
+}
+
+func (p DicePlugin) Execute(command []string) string {
 	if len(command) < 1 {
 		return "herp"
 	}
-        
-	DiceCmd := Roll(command)
-	DiceOut, err := DiceCmd.Output()
+	var dieType string = command[0]
+	roll, err := dice.Roll(dieType)
 	if err != nil {
 		return fmt.Sprintf("Couldn't get output. ERR %v", err)
 	}
-	return "```" + string(DiceOut) + "```"
-}
-func (p DicePlugin) Roll(command string) string {
-        sides, _ := strconv.Atoi(command)
-        result := rand.Intn(sides)
-        return result
+	return "```" + strconv.Itoa(roll.Total) + "```"
 }
