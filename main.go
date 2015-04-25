@@ -7,13 +7,9 @@ import (
 	"github.com/daph/goslack"
 )
 
-func init() {
-	flag.StringVar(&configFile, "config", "gopher.cfg", "configuration file to load")
-	flag.StringVar(&logPath, "log", ".", "path to log file")
-}
-
 func main() {
-	flag.Parse()
+        flag.StringVar(&configFile, "config", "gopher.cfg", "configuration file to load")
+        flag.StringVar(&logPath, "log", ".", "path to log file")
 	InitLogger()
 	err := loadConfig()
 	if err != nil {
