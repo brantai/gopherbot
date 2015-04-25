@@ -3,11 +3,17 @@ package main
 import (
 	"fmt"
 	"os"
-
+	"flag"
 	"github.com/daph/goslack"
 )
 
+func init() {
+	flag.StringVar(&configFile, "config", "gopher.cfg", "configuration file to load")
+	flag.StringVar(&logPath, "log", ".", "path to log file")
+}
+
 func main() {
+	flag.Parse()
 	InitLogger()
 	err := loadConfig()
 	if err != nil {
