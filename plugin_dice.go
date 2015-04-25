@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-    "github.com/tonio-ramirez/dice"
+	"github.com/tonio-ramirez/dice"
 	"strconv"
 )
 
@@ -13,24 +13,24 @@ func init() {
 }
 
 func (p DicePlugin) Help() string {
-	return "Roll the specified type of die. Usage: !dice <die type>"
+	return "Roll the specified type of di(c)e. Usage: !roll <number of dice>d<die type>"
 }
 
 func (p DicePlugin) Name() string {
-	return "dice"
+	return "roll"
 }
 
 func fateDice() string {
 	total := 0
 	for i := 0;i<4;i++{
-		roll, err := dice.Roll("1d4")
+		roll, err := dice.Roll("1d3")
 		if err != nil {
 			return  fmt.Sprintf("Couldn't get output. ERR %v", err)
 		}
 		switch {
 			case roll.Total == 1:
 				total--
-			case roll.Total == 4:
+			case roll.Total == 3:
 				total++
 		}
 	}
