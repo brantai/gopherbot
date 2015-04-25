@@ -10,6 +10,7 @@ import (
 func main() {
         flag.StringVar(&configFile, "config", "gopher.cfg", "configuration file to load")
         flag.StringVar(&logPath, "log", ".", "path to log file")
+	flag.Parse()
 	InitLogger()
 	err := loadConfig()
 	if err != nil {
