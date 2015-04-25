@@ -1,0 +1,10 @@
+[Unit]
+Description=Slack bot that uses the goslack library
+
+[Service]
+ExecStart=/usr/bin/gopherbot -config=/etc/gopher.cfg -log=/var/log/
+Restart=always
+RestartSec=30
+
+[Install]
+WantedBy=multiuser.target

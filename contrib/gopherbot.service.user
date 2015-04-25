@@ -1,0 +1,12 @@
+#Drop this file in ~/.config/systemd/user/ and run systemctl --user start gopherbot
+
+[Unit]
+Description=Slack bot that uses the goslack library
+
+[Service]
+ExecStart=/usr/bin/gopherbot -config=%h/.gopherbot/gopher.cfg -log=%h/.gopherbot/
+Restart=always
+RestartSec=30
+
+[Install]
+WantedBy=default.target
